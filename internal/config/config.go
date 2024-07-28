@@ -4,12 +4,14 @@ type Config struct {
 	RPC_ADDR     string
 	WEB_UI_ADDR  string
 	GATEWAY_ADDR string
+	SERVER_ADDR  string
 }
 
-func Load(rpcAddr, webUIAddr, gatewayAddr string) *Config {
+func Load(rpcAddr, webUIAddr, gatewayAddr, serverAddr string) *Config {
 	return &Config{
 		RPC_ADDR:     rpcAddr,
 		WEB_UI_ADDR:  webUIAddr,
 		GATEWAY_ADDR: gatewayAddr,
+		SERVER_ADDR:  serverAddr,
 	}
 }
