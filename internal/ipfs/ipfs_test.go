@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/zde37/Hive/internal/ipfs"
 )
 
 func TestNewClient(t *testing.T) {
@@ -37,7 +36,7 @@ func TestNewClient(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			client, err := ipfs.NewClient(tt.rpcAddr)
+			client, err := NewClient(tt.rpcAddr)
 			require.Equal(t, tt.wantErr, err != nil)
 			require.Equal(t, tt.wantErr, client == nil)
 		})

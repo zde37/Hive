@@ -56,6 +56,20 @@ func (mr *MockClientMockRecorder) Add(arg0, arg1, arg2 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockClient)(nil).Add), arg0, arg1, arg2)
 }
 
+// DeleteFile mocks base method.
+func (m *MockClient) DeleteFile(arg0 context.Context, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteFile", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteFile indicates an expected call of DeleteFile.
+func (mr *MockClientMockRecorder) DeleteFile(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteFile", reflect.TypeOf((*MockClient)(nil).DeleteFile), arg0, arg1)
+}
+
 // DisplayFileContent mocks base method.
 func (m *MockClient) DisplayFileContent(arg0 context.Context, arg1 string) (string, error) {
 	m.ctrl.T.Helper()
@@ -100,19 +114,19 @@ func (mr *MockClientMockRecorder) DownloadFile(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFile", reflect.TypeOf((*MockClient)(nil).DownloadFile), arg0, arg1)
 }
 
-// GetConnectedPeers mocks base method.
-func (m *MockClient) GetConnectedPeers(arg0 context.Context) ([]ipfs.Peer, error) {
+// ListConnectedNodes mocks base method.
+func (m *MockClient) ListConnectedNodes(arg0 context.Context) ([]ipfs.Node, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetConnectedPeers", arg0)
-	ret0, _ := ret[0].([]ipfs.Peer)
+	ret := m.ctrl.Call(m, "ListConnectedNodes", arg0)
+	ret0, _ := ret[0].([]ipfs.Node)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetConnectedPeers indicates an expected call of GetConnectedPeers.
-func (mr *MockClientMockRecorder) GetConnectedPeers(arg0 any) *gomock.Call {
+// ListConnectedNodes indicates an expected call of ListConnectedNodes.
+func (mr *MockClientMockRecorder) ListConnectedNodes(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetConnectedPeers", reflect.TypeOf((*MockClient)(nil).GetConnectedPeers), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListConnectedNodes", reflect.TypeOf((*MockClient)(nil).ListConnectedNodes), arg0)
 }
 
 // ListDir mocks base method.
@@ -187,18 +201,4 @@ func (m *MockClient) Ping(arg0 context.Context, arg1 string) ([]ipfs.PingInfo, e
 func (mr *MockClientMockRecorder) Ping(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ping", reflect.TypeOf((*MockClient)(nil).Ping), arg0, arg1)
-}
-
-// UnPinObject mocks base method.
-func (m *MockClient) UnPinObject(arg0 context.Context, arg1 string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UnPinObject", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UnPinObject indicates an expected call of UnPinObject.
-func (mr *MockClientMockRecorder) UnPinObject(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnPinObject", reflect.TypeOf((*MockClient)(nil).UnPinObject), arg0, arg1)
 }

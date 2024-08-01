@@ -178,7 +178,7 @@
           } catch (error) {
             console.error("Error fetching nodes:", error);
             isConnected = false;
-            return { peers: [], total: 0 };
+            return { nodes: [], total: 0 };
           }
         }
 
@@ -195,7 +195,7 @@
 
         function displayNodes(data) {
           nodesTableBody.innerHTML = "";
-          data.peers.forEach((node) => {
+          data.nodes.forEach((node) => {
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${node.id}</td>

@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// corsMiddleware is a middleware function that sets the appropriate CORS headers for an HTTP request. 
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")

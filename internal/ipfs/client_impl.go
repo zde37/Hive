@@ -23,21 +23,21 @@ type ClientImpl struct {
 	rpc *rpc.HttpApi // the RPC client.
 }
 
-// NodeInfo contains information about an IPFS node.
+// NodeInfo contains information about an IPFS node. TODO: look into 'AgentVersion' and 'PublicKey' fields
 type NodeInfo struct {
-	Addresses    []string `json:"Addresses"`    // the addresses of the node.
+	Addresses    []string `json:"addresses"`    // the addresses of the node.
 	AgentVersion string   `json:"AgentVersion"` // the version of the IPFS agent.
-	ID           string   `json:"ID"`           // the ID of the node.
-	Protocols    []string `json:"Protocols"`    // the protocols supported by the node.
+	ID           string   `json:"id"`           // the ID of the node.
+	Protocols    []string `json:"protocols"`    // the protocols supported by the node.
 	PublicKey    string   `json:"PublicKey"`    // the public key of the node.
 }
 
-// Peer represents an IPFS peer.
-type Peer struct {
-	ID        string `json:"id"`        // the ID of the peer.
-	Address   string `json:"address"`   // the address of the peer.
+// Node represents an IPFS node.
+type Node struct {
+	ID        string `json:"id"`        // the ID of the node.
+	Address   string `json:"address"`   // the address of the node.
 	Direction string `json:"direction"` // the direction of the connection (inbound or outbound).
-	Latency   int64  `json:"latency"`   // the latency of the connection to the peer.
+	Latency   int64  `json:"latency"`   // the latency of the connection to the node.
 }
 
 // PingInfo contains the result of an IPFS ping operation.
@@ -111,8 +111,6 @@ func (c *ClientImpl) Add(ctx context.Context, fileName, filePath string) (string
 	if err != nil {
 		return "", "", err
 	}
-
-	// TODO: pin folders and it's contents with name
 
 	// pin the object
 	if err = c.PinObject(ctx, fileName, p.String()); err != nil {
@@ -214,7 +212,7 @@ func (c *ClientImpl) garbageCollection(ctx context.Context) error {
 		Exec(ctx, nil)
 }
 
-// DeleteFile unpins the IPFS object at the given path and then performs a garbage collection to remove the unpinned object. 
+// DeleteFile unpins the IPFS object at the given path and then performs a garbage collection to remove the unpinned object.
 func (c *ClientImpl) DeleteFile(ctx context.Context, objectPath string) error {
 	rootPath, err := path.NewPath(objectPath)
 	if err != nil {
@@ -278,30 +276,30 @@ func (c *ClientImpl) DownloadDir(ctx context.Context, cid string, outputPath str
 	return writeDirectory(dir, outputPath)
 }
 
-// GetConnectedPeers returns a list of all the peers that the IPFS node is currently connected to.
-// For each peer, the function returns the peer ID, address, connection direction, and latency.
-func (c *ClientImpl) GetConnectedPeers(ctx context.Context) ([]Peer, error) {
-	connectedPeers, err := c.rpc.Swarm().Peers(ctx)
+// ListConnectedNodes returns a list of all the nodes that the current IPFS node is connected to.
+// For each node, the function returns the node ID, address, connection direction, and latency.
+func (c *ClientImpl) ListConnectedNodes(ctx context.Context) ([]Node, error) {
+	connectedNodes, err := c.rpc.Swarm().Peers(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	var peers []Peer
-	for _, peer := range connectedPeers {
-		latency, err := peer.Latency()
+	var nodes []Node
+	for _, node := range connectedNodes {
+		latency, err := node.Latency()
 		if err != nil {
 			return nil, err
 		}
 
-		peers = append(peers, Peer{
-			ID:        peer.ID().String(),
-			Address:   peer.Address().String(),
-			Direction: peer.Direction().String(),
+		nodes = append(nodes, Node{
+			ID:        node.ID().String(),
+			Address:   node.Address().String(),
+			Direction: node.Direction().String(),
 			Latency:   latency.Milliseconds(),
 		})
 	}
 
-	return peers, nil
+	return nodes, nil
 }
 
 // getPathFromCid converts a CID string to a path.Path.
