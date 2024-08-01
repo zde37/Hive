@@ -12,7 +12,7 @@ type Handler interface {
 	getPeers(w http.ResponseWriter, r *http.Request) error
 	listPins(w http.ResponseWriter, r *http.Request) error
 	pinObject(w http.ResponseWriter, r *http.Request) error
-	unPinObject(w http.ResponseWriter, r *http.Request) error
+	deleteFile(w http.ResponseWriter, r *http.Request) error
 	displayFileContents(w http.ResponseWriter, r *http.Request) error
 	downloadFolder(w http.ResponseWriter, r *http.Request) error
 }

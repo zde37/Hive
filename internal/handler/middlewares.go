@@ -8,6 +8,21 @@ import (
 	"time"
 )
 
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH")
+		w.Header().Set("Access-Control-Allow-Headers", "*")
+		
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		
+		next.ServeHTTP(w, r)
+	})
+}
+
 // errorMiddleware is a middleware function that wraps a handler function and handles any errors that occur.
 // The wrapped handler function should return an error, which this middleware will handle.
 func errorMiddleware(f func(http.ResponseWriter, *http.Request) error) http.HandlerFunc {

@@ -173,7 +173,7 @@ func (c *ClientImpl) Ping(ctx context.Context, peerID string) ([]PingInfo, error
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if response.Output == nil {
 		return nil, fmt.Errorf("no output from ping request or failed to ping self")
 	}
@@ -208,8 +208,14 @@ func (c *ClientImpl) PinObject(ctx context.Context, name, objectPath string) err
 		Exec(ctx, nil)
 }
 
-// UnPinObject removes the pin for the IPFS object at the given path, allowing it to be garbage collected.
-func (c *ClientImpl) UnPinObject(ctx context.Context, objectPath string) error {
+// garbageCollection performs a garbage collection on the IPFS repository to remove any unpinned objects.
+func (c *ClientImpl) garbageCollection(ctx context.Context) error {
+	return c.rpc.Request("repo/gc").
+		Exec(ctx, nil)
+}
+
+// DeleteFile unpins the IPFS object at the given path and then performs a garbage collection to remove the unpinned object. 
+func (c *ClientImpl) DeleteFile(ctx context.Context, objectPath string) error {
 	rootPath, err := path.NewPath(objectPath)
 	if err != nil {
 		return err
@@ -226,7 +232,13 @@ func (c *ClientImpl) UnPinObject(ctx context.Context, objectPath string) error {
 		return fmt.Errorf("..object is pinned %s", res)
 	}
 
-	return c.rpc.Pin().Rm(ctx, rootPath)
+	// first unpin object, then perform garbage collection
+	err = c.rpc.Pin().Rm(ctx, rootPath)
+	if err != nil {
+		return err
+	}
+
+	return c.garbageCollection(ctx)
 }
 
 // DownloadFile downloads the IPFS object with the given CID and returns its contents as a byte slice.

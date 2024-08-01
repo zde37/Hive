@@ -7,6 +7,7 @@ import (
 	"github.com/multiformats/go-multiaddr"
 )
 
+// NewClient creates a new IPFS RPC client using the provided RPC address. 
 func NewClient(rpcAddr string) (*rpc.HttpApi, error) {
 	addr, err := multiaddr.NewMultiaddr(rpcAddr)
 	if err != nil {

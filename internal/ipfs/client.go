@@ -12,7 +12,7 @@ type Client interface {
 	GetConnectedPeers(ctx context.Context) ([]Peer, error)
 	ListPins(ctx context.Context) (any, error)
 	PinObject(ctx context.Context, name, objectPath string) error
-	UnPinObject(ctx context.Context, objectPath string) error
+	DeleteFile(ctx context.Context, objectPath string) error
 	DisplayFileContent(ctx context.Context, filePath string) (string, error)
 	DownloadDir(ctx context.Context, cid string, outputPath string) error
 	ListDir(ctx context.Context, dirPath string) ([]DirFileDetail, error) 

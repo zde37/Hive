@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -46,27 +45,32 @@ func (h *handlerImpl) Mux() *http.ServeMux {
 func (h *handlerImpl) registerRoutes() {
 	h.server.Handle("GET /hello-world", errorMiddleware(h.health))
 	h.server.Handle("GET /info/{peerid}", errorMiddleware(h.getNodeInfo))
-	h.server.Handle("GET /ping/{peerid}", errorMiddleware(h.pingNode))
+	// h.server.Handle("GET /ping/{peerid}", errorMiddleware(h.pingNode))
 	h.server.Handle("GET /peers", errorMiddleware(h.getPeers))
 	h.server.Handle("GET /file", errorMiddleware(h.downloadFile))
-	h.server.Handle("GET /cat/{cid}", errorMiddleware(h.displayFileContents))
-	h.server.Handle("GET /folder", errorMiddleware(h.downloadFolder))
+	// h.server.Handle("GET /cat/{cid}", errorMiddleware(h.displayFileContents))
+	// h.server.Handle("GET /folder", errorMiddleware(h.downloadFolder))
 	h.server.Handle("GET /pins", errorMiddleware(h.listPins))
-	h.server.Handle("PATCH /unpin/{cid}", errorMiddleware(h.unPinObject))
-	h.server.Handle("POST /pin", errorMiddleware(h.pinObject))
+	h.server.Handle("DELETE /file/{cid}", errorMiddleware(h.deleteFile))
+	// h.server.Handle("POST /pin", errorMiddleware(h.pinObject))
 	h.server.Handle("POST /file", errorMiddleware(h.addFile))
-	h.server.Handle("POST /folder", errorMiddleware(h.addFolder))
-	h.server.HandleFunc("GET /hi", func(w http.ResponseWriter, r *http.Request) {
-		tpl, err := template.ParseFiles("./index.html")
+	// h.server.Handle("POST /folder", errorMiddleware(h.addFolder))
+	h.serveStaticFiles()
+	corsServer := corsMiddleware(h.server)
 
-		if err != nil {
-			log.Fatalf("failed to parse templates: %v", err)
-		}
-		tpl.Execute(w, "")
-	})
 	v1 := http.NewServeMux()
-	v1.Handle("/v1/", http.StripPrefix("/v1", h.server))
+	v1.Handle("/v1/", http.StripPrefix("/v1", corsServer))
 	h.server = v1
+}
+
+func (h *handlerImpl) serveStaticFiles() {
+	pages := []string{"home", "files", "nodes", "status"}
+	for _, page := range pages {
+		pageName := page
+		h.server.HandleFunc(fmt.Sprintf("/%s", pageName), func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, fmt.Sprintf("./frontend/%s.html", pageName))
+		})
+	}
 }
 
 // healthHandler responds to health check requests.
@@ -325,14 +329,14 @@ func (h *handlerImpl) pinObject(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(resp)
 }
 
-func (h *handlerImpl) unPinObject(w http.ResponseWriter, r *http.Request) error {
+func (h *handlerImpl) deleteFile(w http.ResponseWriter, r *http.Request) error {
 	cid := r.PathValue("cid")
 	if cid == "" {
 		return NewErrorStatus(fmt.Errorf("cid is required"), http.StatusBadRequest, 0)
 	}
 
 	cid = fmt.Sprintf("/ipfs/%s", cid)
-	if err := h.ipfs.UnPinObject(r.Context(), cid); err != nil {
+	if err := h.ipfs.DeleteFile(r.Context(), cid); err != nil {
 		if strings.HasPrefix(err.Error(), "..") {
 			return NewErrorStatus(err, http.StatusBadRequest, 0)
 		}
