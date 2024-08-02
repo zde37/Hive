@@ -271,8 +271,11 @@ func (c *ClientImpl) DownloadDir(ctx context.Context, cid string, outputPath str
 	if err != nil {
 		return err
 	}
-
-	dir := node.(files.Directory)
+	
+	dir, ok := node.(files.Directory)
+    if !ok {
+        return fmt.Errorf("node is not a directory")
+    }
 	return writeDirectory(dir, outputPath)
 }
 
@@ -312,7 +315,7 @@ func (c *ClientImpl) getPathFromCid(cidString string) (path.Path, error) {
 }
 
 // ListPins returns a list of all the IPFS objects that are currently pinned.
-func (c *ClientImpl) ListPins(ctx context.Context) (any, error) {
+func (c *ClientImpl) ListPins(ctx context.Context) (any, error) { 
 	response, err := c.rpc.Request("pin/ls").
 		Option("names", true).
 		Send(ctx)
@@ -324,7 +327,7 @@ func (c *ClientImpl) ListPins(ctx context.Context) (any, error) {
 	}
 	defer response.Output.Close()
 
-	var res any
+	var res any // TODO: create and use a custom type 
 	if err = json.NewDecoder(response.Output).Decode(&res); err != nil {
 		return nil, err
 	}
@@ -372,32 +375,30 @@ func writeFile(file files.File, path string) error {
 	return err
 }
 
-// writeDirectory recursively writes the contents of the specified files.Directory to the specified directory path.
 func writeDirectory(dir files.Directory, path string) error {
-	err := os.MkdirAll(path, 0755)
-	if err != nil {
-		return err
-	}
+    err := os.MkdirAll(path, 0755)
+    if err != nil {
+        return err
+    }
 
-	// Iterate through the directory entries and write each one to the directory
-	entries := dir.Entries()
-	for entries.Next() {
-		node := entries.Node()
-		childPath := filepath.Join(path, entries.Name())
+    entries := dir.Entries()
+    for entries.Next() {
+        node := entries.Node()
+        childPath := filepath.Join(path, entries.Name())
 
-		switch n := node.(type) {
-		case files.File:
-			err = writeFile(n, childPath)
-		case files.Directory:
-			err = writeDirectory(n, childPath)
-		default:
-			err = fmt.Errorf("unsupported node type")
-		}
+        switch n := node.(type) {
+        case files.File:
+            err = writeFile(n, childPath)
+        case files.Directory:
+            err = writeDirectory(n, childPath) 
+        default:
+            err = fmt.Errorf("unsupported node type: %T", n)
+        }
 
-		if err != nil {
-			return err
-		}
-	}
+        if err != nil {
+            return err
+        }
+    }
 
-	return entries.Err()
+    return entries.Err()
 }
