@@ -236,7 +236,8 @@ func (c *ClientImpl) DeleteFile(ctx context.Context, objectPath string) error {
 		return err
 	}
 
-	return c.garbageCollection(ctx)
+	return nil
+	// return c.garbageCollection(ctx)
 }
 
 // DownloadFile downloads the IPFS object with the given CID and returns its contents as a byte slice.

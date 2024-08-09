@@ -39,6 +39,132 @@ func (m *MockHandler) EXPECT() *MockHandlerMockRecorder {
 	return m.recorder
 }
 
+// AddFile mocks base method.
+func (m *MockHandler) AddFile(arg0 http.ResponseWriter, arg1 *http.Request) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddFile", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AddFile indicates an expected call of AddFile.
+func (mr *MockHandlerMockRecorder) AddFile(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddFile", reflect.TypeOf((*MockHandler)(nil).AddFile), arg0, arg1)
+}
+
+// DeleteFile mocks base method.
+func (m *MockHandler) DeleteFile(arg0 http.ResponseWriter, arg1 *http.Request) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteFile", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteFile indicates an expected call of DeleteFile.
+func (mr *MockHandlerMockRecorder) DeleteFile(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteFile", reflect.TypeOf((*MockHandler)(nil).DeleteFile), arg0, arg1)
+}
+
+// DisplayFileContents mocks base method.
+func (m *MockHandler) DisplayFileContents(arg0 http.ResponseWriter, arg1 *http.Request) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DisplayFileContents", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DisplayFileContents indicates an expected call of DisplayFileContents.
+func (mr *MockHandlerMockRecorder) DisplayFileContents(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DisplayFileContents", reflect.TypeOf((*MockHandler)(nil).DisplayFileContents), arg0, arg1)
+}
+
+// DownloadFile mocks base method.
+func (m *MockHandler) DownloadFile(arg0 http.ResponseWriter, arg1 *http.Request) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DownloadFile", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DownloadFile indicates an expected call of DownloadFile.
+func (mr *MockHandlerMockRecorder) DownloadFile(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFile", reflect.TypeOf((*MockHandler)(nil).DownloadFile), arg0, arg1)
+}
+
+// DownloadFolder mocks base method.
+func (m *MockHandler) DownloadFolder(arg0 http.ResponseWriter, arg1 *http.Request) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DownloadFolder", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DownloadFolder indicates an expected call of DownloadFolder.
+func (mr *MockHandlerMockRecorder) DownloadFolder(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFolder", reflect.TypeOf((*MockHandler)(nil).DownloadFolder), arg0, arg1)
+}
+
+// GetNodeInfo mocks base method.
+func (m *MockHandler) GetNodeInfo(arg0 http.ResponseWriter, arg1 *http.Request) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetNodeInfo", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// GetNodeInfo indicates an expected call of GetNodeInfo.
+func (mr *MockHandlerMockRecorder) GetNodeInfo(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNodeInfo", reflect.TypeOf((*MockHandler)(nil).GetNodeInfo), arg0, arg1)
+}
+
+// Health mocks base method.
+func (m *MockHandler) Health(arg0 http.ResponseWriter, arg1 *http.Request) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Health", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Health indicates an expected call of Health.
+func (mr *MockHandlerMockRecorder) Health(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Health", reflect.TypeOf((*MockHandler)(nil).Health), arg0, arg1)
+}
+
+// ListNodes mocks base method.
+func (m *MockHandler) ListNodes(arg0 http.ResponseWriter, arg1 *http.Request) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListNodes", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListNodes indicates an expected call of ListNodes.
+func (mr *MockHandlerMockRecorder) ListNodes(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListNodes", reflect.TypeOf((*MockHandler)(nil).ListNodes), arg0, arg1)
+}
+
+// ListPins mocks base method.
+func (m *MockHandler) ListPins(arg0 http.ResponseWriter, arg1 *http.Request) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListPins", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListPins indicates an expected call of ListPins.
+func (mr *MockHandlerMockRecorder) ListPins(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPins", reflect.TypeOf((*MockHandler)(nil).ListPins), arg0, arg1)
+}
+
 // Mux mocks base method.
 func (m *MockHandler) Mux() *http.ServeMux {
 	m.ctrl.T.Helper()
@@ -53,156 +179,30 @@ func (mr *MockHandlerMockRecorder) Mux() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Mux", reflect.TypeOf((*MockHandler)(nil).Mux))
 }
 
-// addFile mocks base method.
-func (m *MockHandler) addFile(arg0 http.ResponseWriter, arg1 *http.Request) error {
+// PinObject mocks base method.
+func (m *MockHandler) PinObject(arg0 http.ResponseWriter, arg1 *http.Request) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "addFile", arg0, arg1)
+	ret := m.ctrl.Call(m, "PinObject", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// addFile indicates an expected call of addFile.
-func (mr *MockHandlerMockRecorder) addFile(arg0, arg1 any) *gomock.Call {
+// PinObject indicates an expected call of PinObject.
+func (mr *MockHandlerMockRecorder) PinObject(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "addFile", reflect.TypeOf((*MockHandler)(nil).addFile), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PinObject", reflect.TypeOf((*MockHandler)(nil).PinObject), arg0, arg1)
 }
 
-// displayFileContents mocks base method.
-func (m *MockHandler) displayFileContents(arg0 http.ResponseWriter, arg1 *http.Request) error {
+// PingNode mocks base method.
+func (m *MockHandler) PingNode(arg0 http.ResponseWriter, arg1 *http.Request) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "displayFileContents", arg0, arg1)
+	ret := m.ctrl.Call(m, "PingNode", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// displayFileContents indicates an expected call of displayFileContents.
-func (mr *MockHandlerMockRecorder) displayFileContents(arg0, arg1 any) *gomock.Call {
+// PingNode indicates an expected call of PingNode.
+func (mr *MockHandlerMockRecorder) PingNode(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "displayFileContents", reflect.TypeOf((*MockHandler)(nil).displayFileContents), arg0, arg1)
-}
-
-// downloadFile mocks base method.
-func (m *MockHandler) downloadFile(arg0 http.ResponseWriter, arg1 *http.Request) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "downloadFile", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// downloadFile indicates an expected call of downloadFile.
-func (mr *MockHandlerMockRecorder) downloadFile(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "downloadFile", reflect.TypeOf((*MockHandler)(nil).downloadFile), arg0, arg1)
-}
-
-// downloadFolder mocks base method.
-func (m *MockHandler) downloadFolder(arg0 http.ResponseWriter, arg1 *http.Request) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "downloadFolder", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// downloadFolder indicates an expected call of downloadFolder.
-func (mr *MockHandlerMockRecorder) downloadFolder(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "downloadFolder", reflect.TypeOf((*MockHandler)(nil).downloadFolder), arg0, arg1)
-}
-
-// getNodeInfo mocks base method.
-func (m *MockHandler) getNodeInfo(arg0 http.ResponseWriter, arg1 *http.Request) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "getNodeInfo", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// getNodeInfo indicates an expected call of getNodeInfo.
-func (mr *MockHandlerMockRecorder) getNodeInfo(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "getNodeInfo", reflect.TypeOf((*MockHandler)(nil).getNodeInfo), arg0, arg1)
-}
-
-// getPeers mocks base method.
-func (m *MockHandler) getPeers(arg0 http.ResponseWriter, arg1 *http.Request) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "getPeers", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// getPeers indicates an expected call of getPeers.
-func (mr *MockHandlerMockRecorder) getPeers(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "getPeers", reflect.TypeOf((*MockHandler)(nil).getPeers), arg0, arg1)
-}
-
-// health mocks base method.
-func (m *MockHandler) health(arg0 http.ResponseWriter, arg1 *http.Request) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "health", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// health indicates an expected call of health.
-func (mr *MockHandlerMockRecorder) health(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "health", reflect.TypeOf((*MockHandler)(nil).health), arg0, arg1)
-}
-
-// listPins mocks base method.
-func (m *MockHandler) listPins(arg0 http.ResponseWriter, arg1 *http.Request) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "listPins", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// listPins indicates an expected call of listPins.
-func (mr *MockHandlerMockRecorder) listPins(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "listPins", reflect.TypeOf((*MockHandler)(nil).listPins), arg0, arg1)
-}
-
-// pinObject mocks base method.
-func (m *MockHandler) pinObject(arg0 http.ResponseWriter, arg1 *http.Request) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "pinObject", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// pinObject indicates an expected call of pinObject.
-func (mr *MockHandlerMockRecorder) pinObject(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "pinObject", reflect.TypeOf((*MockHandler)(nil).pinObject), arg0, arg1)
-}
-
-// pingNode mocks base method.
-func (m *MockHandler) pingNode(arg0 http.ResponseWriter, arg1 *http.Request) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "pingNode", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// pingNode indicates an expected call of pingNode.
-func (mr *MockHandlerMockRecorder) pingNode(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "pingNode", reflect.TypeOf((*MockHandler)(nil).pingNode), arg0, arg1)
-}
-
-// unPinObject mocks base method.
-func (m *MockHandler) unPinObject(arg0 http.ResponseWriter, arg1 *http.Request) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "unPinObject", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// unPinObject indicates an expected call of unPinObject.
-func (mr *MockHandlerMockRecorder) unPinObject(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "unPinObject", reflect.TypeOf((*MockHandler)(nil).unPinObject), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PingNode", reflect.TypeOf((*MockHandler)(nil).PingNode), arg0, arg1)
 }

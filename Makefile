@@ -1,16 +1,13 @@
 IPFS_CONTAINER_NAME=ipfs_host
 IPFS_STAGING=$(HOME)/.ipfs/staging
 IPFS_DATA=$(HOME)/.ipfs/data
-IPFS_PROFILE=test
+IPFS_PROFILE=server
 
 run:
 	go run cmd/main.go
 
 test:
-	go test -v -cover -count 1 ./...
-
-mock-client:
-	mockgen -package mocked -destination internal/mocks/client.go github.com/zde37/Hive/internal/ipfs Client
+	go test -v -cover -timeout 600s -count 1 ./...
 
 mock-handler:
 	mockgen -package mocked -destination internal/mocks/handler.go github.com/zde37/Hive/internal/handler Handler
@@ -48,4 +45,4 @@ ipfs-rm:
 	rm -rf $(IPFS_DATA)
 	rm -rf $(IPFS_STAGING)
 
-.PHONY: run test mock-client mock-handler ipfs_rm ipfs_stop ipfs-start ipfs-logs ipfs-run ipfs-init
+.PHONY: run test mock-handler ipfs_rm ipfs_stop ipfs-start ipfs-logs ipfs-run ipfs-init

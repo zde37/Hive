@@ -10,7 +10,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/zde37/Hive/internal/ipfs"
 )
 
@@ -18,18 +17,16 @@ const maxUploadSize = 100 * 1024 * 1024 // 100MB in bytes
 
 // handlerImpl implements the Handler interface and manages HTTP request handling.
 type handlerImpl struct {
-	ipfs     ipfs.Client
-	server   *http.ServeMux
-	validate *validator.Validate
+	ipfs   ipfs.Client
+	server *http.ServeMux
 }
 
 // NewHandlerImpl creates and initializes a new Handler instance.
 func NewHandlerImpl(ipfs ipfs.Client) Handler {
 	mux := http.NewServeMux()
 	handlerImpl := &handlerImpl{
-		ipfs:     ipfs,
-		server:   mux,
-		validate: validator.New(),
+		ipfs:   ipfs,
+		server: mux,
 	}
 
 	handlerImpl.registerRoutes()
@@ -43,18 +40,20 @@ func (h *handlerImpl) Mux() *http.ServeMux {
 
 // registerRoutes sets up the routing for the handler.
 func (h *handlerImpl) registerRoutes() {
-	h.server.Handle("GET /hello-world", errorMiddleware(h.health))
-	h.server.Handle("GET /info/{peerid}", errorMiddleware(h.getNodeInfo))
-	// h.server.Handle("GET /ping/{peerid}", errorMiddleware(h.pingNode))
-	h.server.Handle("GET /peers", errorMiddleware(h.listNodes))
-	h.server.Handle("GET /file", errorMiddleware(h.downloadFile))
-	// h.server.Handle("GET /cat/{cid}", errorMiddleware(h.displayFileContents))
-	// h.server.Handle("GET /folder", errorMiddleware(h.downloadFolder))
-	h.server.Handle("GET /pins", errorMiddleware(h.listPins))
-	h.server.Handle("DELETE /file/{cid}", errorMiddleware(h.deleteFile))
-	// h.server.Handle("POST /pin", errorMiddleware(h.pinObject))
-	h.server.Handle("POST /file", errorMiddleware(h.addFile))
-	// h.server.Handle("POST /folder", errorMiddleware(h.addFolder))
+	h.server.Handle("GET /hello-world", errorMiddleware(h.Health))
+	h.server.Handle("GET /info/{peerid}", errorMiddleware(h.GetNodeInfo))
+	h.server.Handle("GET /peers", errorMiddleware(h.ListNodes))
+	h.server.Handle("GET /file", errorMiddleware(h.DownloadFile))
+	h.server.Handle("GET /pins", errorMiddleware(h.ListPins))
+	h.server.Handle("DELETE /file/{cid}", errorMiddleware(h.DeleteFile))
+	h.server.Handle("POST /file", errorMiddleware(h.AddFile))
+
+	// h.server.Handle("GET /ping/{peerid}", errorMiddleware(h.PingNode))
+	// h.server.Handle("GET /cat/{cid}", errorMiddleware(h.DisplayFileContents))
+	// h.server.Handle("GET /folder", errorMiddleware(h.DownloadFolder))
+
+	// h.server.Handle("POST /pin", errorMiddleware(h.PinObject))
+	// h.server.Handle("POST /folder", errorMiddleware(h.AddFolder))
 	h.serveStaticFiles()
 	corsServer := corsMiddleware(h.server)
 
@@ -63,7 +62,7 @@ func (h *handlerImpl) registerRoutes() {
 	h.server = v1
 }
 
-// serveStaticFiles sets up routes to serve static HTML files for the application's pages. 
+// serveStaticFiles sets up routes to serve static HTML files for the application's pages.
 func (h *handlerImpl) serveStaticFiles() {
 	pages := []string{"home", "files", "nodes", "status"}
 	for _, page := range pages {
@@ -75,7 +74,7 @@ func (h *handlerImpl) serveStaticFiles() {
 }
 
 // healthHandler responds to health check requests.
-func (h *handlerImpl) health(w http.ResponseWriter, r *http.Request) error {
+func (h *handlerImpl) Health(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, err := io.WriteString(w, "Hello world")
@@ -85,8 +84,8 @@ func (h *handlerImpl) health(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-// getNodeInfo retrieves information about the IPFS node identified by the provided peer ID. 
-func (h *handlerImpl) getNodeInfo(w http.ResponseWriter, r *http.Request) error {
+// getNodeInfo retrieves information about the IPFS node identified by the provided peer ID.
+func (h *handlerImpl) GetNodeInfo(w http.ResponseWriter, r *http.Request) error {
 	peerID := r.PathValue("peerid")
 	if peerID == "" {
 		return NewErrorStatus(fmt.Errorf("peerid is required"), http.StatusBadRequest, 0)
@@ -101,8 +100,8 @@ func (h *handlerImpl) getNodeInfo(w http.ResponseWriter, r *http.Request) error 
 	return json.NewEncoder(w).Encode(nodeInfo)
 }
 
-// pingNode handles a request to ping an IPFS node identified by the provided peer ID. 
-func (h *handlerImpl) pingNode(w http.ResponseWriter, r *http.Request) error {
+// pingNode handles a request to ping an IPFS node identified by the provided peer ID.
+func (h *handlerImpl) PingNode(w http.ResponseWriter, r *http.Request) error {
 	peerID := r.PathValue("peerid")
 	if peerID == "" {
 		return NewErrorStatus(fmt.Errorf("peerid is required"), http.StatusBadRequest, 0)
@@ -127,8 +126,8 @@ func (h *handlerImpl) pingNode(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(resp)
 }
 
-// addFile handles the upload of a file to the IPFS network. 
-func (h *handlerImpl) addFile(w http.ResponseWriter, r *http.Request) error {
+// addFile handles the upload of a file to the IPFS network.
+func (h *handlerImpl) AddFile(w http.ResponseWriter, r *http.Request) error {
 	if err := r.ParseMultipartForm(10 << 20); err != nil { // 10 mb
 		return NewErrorStatus(err, http.StatusBadRequest, 0)
 	}
@@ -183,7 +182,7 @@ func (h *handlerImpl) addFile(w http.ResponseWriter, r *http.Request) error {
 }
 
 // addFolder handles the upload of a folder to the IPFS network. // TODO: work on this
-func (h *handlerImpl) addFolder(w http.ResponseWriter, r *http.Request) error {
+func (h *handlerImpl) AddFolder(w http.ResponseWriter, r *http.Request) error {
 	reader, err := r.MultipartReader()
 	if err != nil {
 		return NewErrorStatus(err, http.StatusBadRequest, 0)
@@ -253,8 +252,8 @@ func (h *handlerImpl) addFolder(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(resp)
 }
 
-// listNodes is an HTTP handler that returns a list of connected IPFS nodes. 
-func (h *handlerImpl) listNodes(w http.ResponseWriter, r *http.Request) error {
+// listNodes is an HTTP handler that returns a list of connected IPFS nodes.
+func (h *handlerImpl) ListNodes(w http.ResponseWriter, r *http.Request) error {
 	nodes, err := h.ipfs.ListConnectedNodes(r.Context())
 	if err != nil {
 		return NewErrorStatus(err, http.StatusInternalServerError, 1)
@@ -272,8 +271,8 @@ func (h *handlerImpl) listNodes(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(resp)
 }
 
-// listPins is an HTTP handler that returns a list of pinned IPFS objects. 
-func (h *handlerImpl) listPins(w http.ResponseWriter, r *http.Request) error {
+// listPins is an HTTP handler that returns a list of pinned IPFS objects.
+func (h *handlerImpl) ListPins(w http.ResponseWriter, r *http.Request) error {
 	pins, err := h.ipfs.ListPins(r.Context())
 	if err != nil {
 		return NewErrorStatus(err, http.StatusInternalServerError, 1)
@@ -292,8 +291,8 @@ func (h *handlerImpl) listPins(w http.ResponseWriter, r *http.Request) error {
 }
 
 // displayFileContents is an HTTP handler that retrieves the content of a file
-// identified by the provided CID (Content Identifier) and returns it as a JSON response. 
-func (h *handlerImpl) displayFileContents(w http.ResponseWriter, r *http.Request) error {
+// identified by the provided CID (Content Identifier) and returns it as a JSON response.
+func (h *handlerImpl) DisplayFileContents(w http.ResponseWriter, r *http.Request) error {
 	cid := r.PathValue("cid")
 	if cid == "" {
 		return NewErrorStatus(fmt.Errorf("cid is required"), http.StatusBadRequest, 0)
@@ -315,8 +314,8 @@ func (h *handlerImpl) displayFileContents(w http.ResponseWriter, r *http.Request
 	return json.NewEncoder(w).Encode(resp)
 }
 
-// pinObject handles a request to pin an IPFS object to the node. 
-func (h *handlerImpl) pinObject(w http.ResponseWriter, r *http.Request) error {
+// pinObject handles a request to pin an IPFS object to the node.
+func (h *handlerImpl) PinObject(w http.ResponseWriter, r *http.Request) error {
 	name := r.FormValue("name")
 	cid := r.FormValue("cid")
 	if name == "" || cid == "" {
@@ -338,8 +337,8 @@ func (h *handlerImpl) pinObject(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(resp)
 }
 
-// deleteFile is an HTTP handler that deletes an IPFS file identified by the provided CID (Content Identifier). 
-func (h *handlerImpl) deleteFile(w http.ResponseWriter, r *http.Request) error {
+// deleteFile is an HTTP handler that deletes an IPFS file identified by the provided CID (Content Identifier).
+func (h *handlerImpl) DeleteFile(w http.ResponseWriter, r *http.Request) error {
 	cid := r.PathValue("cid")
 	if cid == "" {
 		return NewErrorStatus(fmt.Errorf("cid is required"), http.StatusBadRequest, 0)
@@ -363,8 +362,8 @@ func (h *handlerImpl) deleteFile(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(resp)
 }
 
-// downloadFile handles a request to download a file from the IPFS node. 
-func (h *handlerImpl) downloadFile(w http.ResponseWriter, r *http.Request) error {
+// downloadFile handles a request to download a file from the IPFS node.
+func (h *handlerImpl) DownloadFile(w http.ResponseWriter, r *http.Request) error {
 	cid := r.URL.Query().Get("cid")
 	if cid == "" {
 		return NewErrorStatus(fmt.Errorf("cid is required"), http.StatusBadRequest, 0)
@@ -381,7 +380,7 @@ func (h *handlerImpl) downloadFile(w http.ResponseWriter, r *http.Request) error
 	return nil
 }
 
-// downloadFolder is an HTTP handler that downloads an IPFS folder identified by the provided CID (Content Identifier). 
-func (h *handlerImpl) downloadFolder(w http.ResponseWriter, r *http.Request) error {
+// downloadFolder is an HTTP handler that downloads an IPFS folder identified by the provided CID (Content Identifier).
+func (h *handlerImpl) DownloadFolder(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
