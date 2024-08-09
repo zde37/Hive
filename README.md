@@ -71,7 +71,7 @@ After starting the application, navigate to `<SERVER_ADDR>/v1/home` e.g `http://
 ### Node Information
 
 1. Click on the "Nodes" tab to view information about connected IPFS nodes.
-2. You can ping nodes(indriectly) and view detailed node information.
+2. You can ping nodes(indirectly) and view detailed node information.
 
 ## API Endpoints
 
